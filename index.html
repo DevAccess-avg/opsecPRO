@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OPSEC · opscc.exe</title>
+  <!-- Font Awesome 6 (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ---------- OPSEC / CYBERPUNK DARK THEME ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #080c0e;
+      background-image: 
+        radial-gradient(circle at 20% 30%, #0b1a1a 0%, #030505 90%),
+        repeating-linear-gradient(0deg, rgba(0, 255, 170, 0.02) 0px, rgba(0, 255, 170, 0.02) 1px, transparent 1px, transparent 3px);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+      padding: 1.5rem;
+      color: #b5ffe0;
+      text-shadow: 0 0 5px #00bb88;
+    }
+
+    .container {
+      max-width: 880px;
+      width: 100%;
+      background: #0d1316;
+      background: linear-gradient(145deg, #0b1417, #0a1113);
+      border: 1px solid #1d4f47;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 255, 170, 0.04), inset 0 0 30px rgba(0, 30, 20, 0.3);
+      padding: 2.8rem 2.5rem;
+      border-radius: 36px;
+      backdrop-filter: blur(2px);
+      transition: 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #00cc88, #006644, #00cc88, #006644);
+      background-size: 400% 400%;
+      border-radius: 38px;
+      z-index: -1;
+      opacity: 0.2;
+      animation: borderGlow 12s ease infinite;
+    }
+    @keyframes borderGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #1d5347;
+      padding-bottom: 0.8rem;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .header h1 {
+      font-weight: 400;
+      font-size: 2.0rem;
+      letter-spacing: 0.15rem;
+      color: #a8f5da;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .header h1 i {
+      color: #2ce6b0;
+      font-size: 2.0rem;
+      filter: drop-shadow(0 0 8px #00cc88);
+    }
+
+    .status-badge {
+      background: #10231e;
+      padding: 0.35rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid #2f7a66;
+      font-size: 0.7rem;
+      color: #7ad6b4;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(4px);
+    }
+
+    .status-badge i {
+      font-size: 0.5rem;
+      color: #3effb8;
+    }
+
+    .opsec-panel {
+      background: #0b171a;
+      background: linear-gradient(135deg, #0b1a1a, #081213);
+      border-left: 5px solid #2abf8f;
+      padding: 1.2rem 2rem;
+      margin: 1.6rem 0 2rem 0;
+      border-radius: 16px;
+      box-shadow: inset 0 0 30px rgba(0, 40, 30, 0.5), 0 4px 12px rgba(0,0,0,0.4);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .opsec-panel .tagline {
+      font-size: 0.95rem;
+      color: #9cf0d0;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+    }
+
+    .opsec-panel .tagline i {
+      color: #3be6b0;
+      margin-right: 8px;
+    }
+
+    .opsec-panel .lock-icon {
+      font-size: 1.8rem;
+      color: #3ad6a2;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .opsec-panel .lock-icon span {
+      font-size: 0.65rem;
+      background: #0d2822;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      color: #89cfb0;
+      letter-spacing: 0.5px;
+      border: 1px solid #1f6b56;
+    }
+
+    .download-card {
+      background: #0b171c;
+      background: radial-gradient(circle at 80% 20%, #11221f, #081114);
+      border: 1px solid #256f5b;
+      border-radius: 30px;
+      padding: 2.2rem 2rem;
+      margin: 2.4rem 0 1.8rem 0;
+      transition: 0.25s;
+      box-shadow: 0 10px 0 #071511, 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .download-card:hover {
+      border-color: #4cdbb0;
+      box-shadow: 0 10px 0 #0b1f1a, 0 0 35px rgba(0, 200, 150, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .download-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.2rem 2rem;
+    }
+
+    .file-icon {
+      background: #0f2622;
+      padding: 0.8rem 1.4rem;
+      border-radius: 20px;
+      border: 1px solid #2d8a72;
+      font-size: 2.0rem;
+      color: #5fe6ba;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: inset 0 0 20px rgba(0, 60, 40, 0.3);
+    }
+
+    .file-icon span {
+      font-size: 0.8rem;
+      background: #1a3f35;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      color: #c4ffe6;
+      letter-spacing: 0.4px;
+      border: 1px solid #2f876e;
+    }
+
+    .file-meta {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .file-meta .filename {
+      font-weight: 500;
+      font-size: 1.3rem;
+      color: #daffef;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-meta .filename i {
+      color: #30d69e;
+      font-size: 1rem;
+    }
+
+    .file-meta .filesize {
+      font-size: 0.8rem;
+      color: #6fa690;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .file-meta .filesize i {
+      color: #3cae86;
+    }
+
+    .btn-download {
+      background: #0f2824;
+      background: linear-gradient(145deg, #12332c, #0c1f1b);
+      border: 2px solid #30b88e;
+      padding: 1rem 2.6rem;
+      border-radius: 80px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 1.2px;
+      color: #d0ffe6;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      transition: 0.2s;
+      box-shadow: 0 6px 0 #0a1e18, 0 0 20px rgba(0, 200, 150, 0.1);
+      text-transform: uppercase;
+    }
+
+    .btn-download i {
+      font-size: 1.2rem;
+      color: #4aeaba;
+    }
+
+    .btn-download:hover {
+      background: #16433a;
+      border-color: #51f0c2;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 0 #0a1e18, 0 0 40px #00ddaa33;
+      color: #f0fff8;
+    }
+
+    .btn-download:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #0a1e18;
+    }
+
+    .exe-badge {
+      background: #1b4238;
+      border-radius: 30px;
+      padding: 0.2rem 1rem;
+      font-size: 0.6rem;
+      color: #9ff0ce;
+      border: 1px solid #3a9a7a;
+      letter-spacing: 0.4px;
+      margin-left: 4px;
+    }
+
+    .footnotes {
+      margin-top: 2.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      border-top: 1px solid #1f4a3e;
+      padding-top: 1.2rem;
+      font-size: 0.7rem;
+      color: #528f7a;
+      letter-spacing: 0.4px;
+    }
+
+    .footnotes .hash {
+      font-family: monospace;
+      background: #0f211d;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+      border: 1px solid #256b56;
+      color: #6bc6a4;
+    }
+
+    .footnotes i {
+      margin-right: 5px;
+      color: #3b9a7a;
+    }
+
+    .glow-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      background: #2be6a8;
+      border-radius: 50%;
+      box-shadow: 0 0 18px #2be6a8;
+      margin-right: 6px;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.4; transform: scale(0.9); }
+    }
+
+    /* responsive */
+    @media (max-width: 650px) {
+      .container { padding: 1.5rem; }
+      .header h1 { font-size: 1.5rem; }
+      .download-row { flex-direction: column; align-items: stretch; }
+      .btn-download { justify-content: center; padding: 0.9rem 1.8rem; }
+      .opsec-panel { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .file-meta .filename { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>
+        <i class="fas fa-skull"></i> 
+        OPSEC
+      </h1>
+      <div class="status-badge">
+        <i class="fas fa-circle"></i> secure · live
+        <span style="margin:0 4px; opacity:0.4;">|</span>
+        <i class="fas fa-shield-halved"></i>
+      </div>
+    </div>
+
+    <div class="opsec-panel">
+      <div class="tagline">
+        <i class="fas fa-crosshairs"></i> 
+        <span style="font-weight: 400;">operational security · zero-trust</span>
+      </div>
+      <div class="lock-icon">
+        <i class="fas fa-fingerprint"></i>
+        <span>#AES‑256</span>
+      </div>
+    </div>
+
+    <div class="download-card">
+      <div class="download-row">
+        <div class="file-icon">
+          <i class="fas fa-cog"></i>
+          <span>.exe</span>
+        </div>
+        <div class="file-meta">
+          <div class="filename">
+            <i class="fas fa-lock" style="font-size: 0.8rem; color: #3db592;"></i>
+            opscc.exe
+            <span class="exe-badge">executable</span>
+          </div>
+          <div class="filesize">
+            <i class="fas fa-database"></i> 86,107 KB 
+            <span style="color: #3f7d67;">•</span> 
+            <i class="fas fa-check-circle" style="color: #2fab82;"></i> signed
+          </div>
+        </div>
+        <button class="btn-download" id="downloadBtn">
+          <i class="fas fa-arrow-down"></i> Download
+        </button>
+      </div>
+    </div>
+
+    <div class="footnotes">
+      <div>
+        <i class="fas fa-user-secret"></i> identity: ephemeral 
+        <span style="margin:0 6px;">·</span> 
+        <i class="fas fa-clock"></i> 2026-07-16 23:59 UTC
+      </div>
+      <div class="hash">
+        <i class="fas fa-hashtag"></i> sha256: a3f5c9...1b7d
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 0.8rem; align-items: center; gap: 12px;">
+      <span style="color: #307a64; font-size: 0.65rem; letter-spacing: 0.5px;">
+        <i class="fas fa-ghost"></i> TOR · I2P ready
+      </span>
+      <span class="glow-dot"></span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const downloadBtn = document.getElementById('downloadBtn');
+
+      // ================================================================
+      //  OPTION 1: DOWNLOAD FROM YOUR GITHUB REPOSITORY (RECOMMENDED)
+      // ================================================================
+      // 1. Place your opscc.exe file in your GitHub repo (e.g., in the same folder as this HTML)
+      // 2. Update the URL below to point to your file
+      // 3. Uncomment this block and comment out OPTION 2
+      // ================================================================
+
+      async function downloadFromServer() {
+        try {
+          // Change this path to where your file is located in the repo
+          const fileUrl = 'opscc.exe'; // or './opscc.exe' or 'files/opscc.exe'
+          
+          const response = await fetch(fileUrl);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'opscc.exe';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+          }, 250);
+        } catch (error) {
+          console.error('Download failed:', error);
+          alert('Download failed. Make sure the file exists in the repository.\nError: ' + error.message);
+        }
+      }
+
+      // Use this for OPTION 1 (uncomment the line below)
+      downloadBtn.addEventListener('click', downloadFromServer);
+
+      // ================================================================
+      //  OPTION 2: STATIC TEXT CONTENT (DEMO ONLY - NOT RECOMMENDED FOR .exe)
+      // ================================================================
+      // This would create a text file, not a real executable.
+      // Only use this for testing or text files.
+      // ================================================================
+      /*
+      const fileContent = `This is a placeholder. For a real .exe file, use OPTION 1 above.`;
+      const blob = new Blob([fileContent], { type: 'application/octet-stream' });
+      
+      function triggerDownload() {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'opsec.exe';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => { URL.revokeObjectURL(url); }, 250);
+      }
+      
+      downloadBtn.addEventListener('click', triggerDownload);
+      */
+
+      console.log('OPSEC · opssec.exe ready');
+      console.log('Make sure the file is in your repository!');
+    })();
+  </script>
+</body>
+</html>
