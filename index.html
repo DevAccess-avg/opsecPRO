@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OPSEC · opscc.exe</title>
-  <!-- Font Awesome 6 (free) -->
+  <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ---------- OPSEC / CYBERPUNK DARK THEME ---------- */
     * {
       margin: 0;
       padding: 0;
@@ -58,6 +57,7 @@
       opacity: 0.2;
       animation: borderGlow 12s ease infinite;
     }
+
     @keyframes borderGlow {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -329,7 +329,6 @@
       100% { opacity: 0.4; transform: scale(0.9); }
     }
 
-    /* responsive */
     @media (max-width: 650px) {
       .container { padding: 1.5rem; }
       .header h1 { font-size: 1.5rem; }
@@ -415,71 +414,39 @@
       const downloadBtn = document.getElementById('downloadBtn');
 
       // ================================================================
-      //  OPTION 1: DOWNLOAD FROM YOUR GITHUB REPOSITORY (RECOMMENDED)
+      //  YOUR GOOGLE DRIVE DOWNLOAD LINK (CONFIGURED)
       // ================================================================
-      // 1. Place your opscc.exe file in your GitHub repo (e.g., in the same folder as this HTML)
-      // 2. Update the URL below to point to your file
-      // 3. Uncomment this block and comment out OPTION 2
+      
+      // This is your actual Google Drive link
+      const DOWNLOAD_URL = 'https://drive.google.com/file/d/1dsZweslCNH9nW_Aj9i7XYazfexpvpa9I/view?usp=sharing';
+      
+      // Optional: Direct download link (bypasses Google Drive viewer)
+      // Extract the file ID and use this format for direct download
+      const FILE_ID = '1dsZweslCNH9nW_Aj9i7XYazfexpvpa9I';
+      const DIRECT_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${FILE_ID}`;
+      
       // ================================================================
-
-      async function downloadFromServer() {
-        try {
-          // Change this path to where your file is located in the repo
-          const fileUrl = 'opscc.exe'; // or './opscc.exe' or 'files/opscc.exe'
-          
-          const response = await fetch(fileUrl);
-          
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'opscc.exe';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          
-          setTimeout(() => {
-            URL.revokeObjectURL(url);
-          }, 250);
-        } catch (error) {
-          console.error('Download failed:', error);
-          alert('Download failed. Make sure the file exists in the repository.\nError: ' + error.message);
-        }
+      //  Choose which URL to use:
+      //  - DOWNLOAD_URL: Opens Google Drive viewer (user clicks download there)
+      //  - DIRECT_DOWNLOAD_URL: Starts download directly (may show warning for large files)
+      // ================================================================
+      
+      // Using DIRECT_DOWNLOAD_URL for one-click download experience
+      // Change to DOWNLOAD_URL if you prefer the Google Drive viewer
+      const ACTIVE_URL = DIRECT_DOWNLOAD_URL; // or DOWNLOAD_URL
+      
+      function downloadFile() {
+        // Method 1: Open in same tab (redirect)
+        window.location.href = ACTIVE_URL;
+        
+        // Method 2: Open in new tab (uncomment below if preferred)
+        // window.open(ACTIVE_URL, '_blank');
       }
 
-      // Use this for OPTION 1 (uncomment the line below)
-      downloadBtn.addEventListener('click', downloadFromServer);
+      downloadBtn.addEventListener('click', downloadFile);
 
-      // ================================================================
-      //  OPTION 2: STATIC TEXT CONTENT (DEMO ONLY - NOT RECOMMENDED FOR .exe)
-      // ================================================================
-      // This would create a text file, not a real executable.
-      // Only use this for testing or text files.
-      // ================================================================
-      /*
-      const fileContent = `This is a placeholder. For a real .exe file, use OPTION 1 above.`;
-      const blob = new Blob([fileContent], { type: 'application/octet-stream' });
-      
-      function triggerDownload() {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'opsec.exe';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => { URL.revokeObjectURL(url); }, 250);
-      }
-      
-      downloadBtn.addEventListener('click', triggerDownload);
-      */
-
-      console.log('OPSEC · opssec.exe ready');
-      console.log('Make sure the file is in your repository!');
+      console.log('OPSEC · Download redirect ready');
+      console.log('Download URL:', ACTIVE_URL);
     })();
   </script>
 </body>
